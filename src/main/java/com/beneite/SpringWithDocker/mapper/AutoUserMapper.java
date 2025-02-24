@@ -1,7 +1,7 @@
 package com.beneite.SpringWithDocker.mapper;
 
-import com.springgroup.springboot_rest_api.dto.UserDto;
-import com.springgroup.springboot_rest_api.entity.UserEntity;
+import com.beneite.SpringWithDocker.dto.UserDto;
+import com.beneite.SpringWithDocker.entity.UserEntity;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

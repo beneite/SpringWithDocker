@@ -1,7 +1,7 @@
 package com.beneite.SpringWithDocker.service;
 
-import com.springgroup.springboot_rest_api.dto.UserDto;
-import com.springgroup.springboot_rest_api.entity.UserEntity;
+
+import com.beneite.SpringWithDocker.dto.UserDto;
 
 import java.util.List;
 
