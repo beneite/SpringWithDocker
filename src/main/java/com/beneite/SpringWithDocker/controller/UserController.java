@@ -1,7 +1,7 @@
 package com.beneite.SpringWithDocker.controller;
 
-import com.springgroup.springboot_rest_api.dto.UserDto;
-import com.springgroup.springboot_rest_api.service.implementation.UserServiceImpl;
+import com.beneite.SpringWithDocker.dto.UserDto;
+import com.beneite.SpringWithDocker.service.implementation.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;

@@ -1,13 +1,13 @@
 package com.beneite.SpringWithDocker.service.implementation;
 
-import com.springgroup.springboot_rest_api.dto.UserDto;
-import com.springgroup.springboot_rest_api.entity.UserEntity;
-import com.springgroup.springboot_rest_api.exception.DuplicateEmailException;
-import com.springgroup.springboot_rest_api.exception.ResourceNotFoundException;
-import com.springgroup.springboot_rest_api.mapper.AutoUserMapper;
-import com.springgroup.springboot_rest_api.mapper.UserMapper;
-import com.springgroup.springboot_rest_api.repository.UserRepository;
-import com.springgroup.springboot_rest_api.service.UserService;
+
+import com.beneite.SpringWithDocker.dto.UserDto;
+import com.beneite.SpringWithDocker.entity.UserEntity;
+import com.beneite.SpringWithDocker.exception.DuplicateEmailException;
+import com.beneite.SpringWithDocker.exception.ResourceNotFoundException;
+import com.beneite.SpringWithDocker.mapper.AutoUserMapper;
+import com.beneite.SpringWithDocker.repository.UserRepository;
+import com.beneite.SpringWithDocker.service.UserService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
