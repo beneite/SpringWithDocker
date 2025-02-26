@@ -31,3 +31,7 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### Docker Volume mapping ###
+/src/main/resources/dockerizedEntireApp/volumes/mysql_data
+/src/main/resources/dockerWithDb/mysql_data
