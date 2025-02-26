@@ -37,7 +37,9 @@ project-root/
 ```sh
 git clone https://github.com/beneite/SpringBootBasics.git
 cd SpringWithDocker
+mvn clean package -DskipTests
 ```
+> Running ```mvn clean package -DskipTests``` will create a SpringWithDocker-0.0.1-SNAPSHOT.jar file in target folder.
 
 ### 2️⃣ Build and Run Containers
 
