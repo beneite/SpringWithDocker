@@ -37,9 +37,7 @@ project-root/
 ```sh
 git clone https://github.com/beneite/SpringBootBasics.git
 cd SpringWithDocker
-mvn clean package -DskipTests
 ```
-> Running ```mvn clean package -DskipTests``` will create a SpringWithDocker-0.0.1-SNAPSHOT.jar file in target folder.
 
 ### 2️⃣ Build and Run Containers
 
@@ -49,6 +47,8 @@ docker compose --profile entireApp up --build
 - `--profile entireApp` will spin up the tagged services with 'entireApp' only
 - `-d` runs containers in detached mode
 - `--build` forces a rebuild of the Spring Boot image
+- The docker compose will also take care of building the docker file/image.
+- The docker file used is a multistage where in stage 1st i am creating the .jar file using the same in 2nd stage to bring the application up.
 
 ### 3️⃣ Check Running Containers
 
