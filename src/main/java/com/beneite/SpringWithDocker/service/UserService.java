@@ -7,10 +7,10 @@ import java.util.List;
 
 public interface UserService {
 
-    UserDto createUser (UserDto userEntity);
-    UserDto getUserById (Long userId);
-    List<UserDto> getAllUsers();
-    UserDto updateUser(UserDto userDto);
-    void deleteUser(Long userId);
+    UserDto createUserImplementation(UserDto userEntity);
+    UserDto getUserByIdImplementation(Long userId);
+    List<UserDto> getAllUsersImplementation();
+    UserDto updateUserImplementation(UserDto userDto);
+    void deleteUserImplementation(Long userId);
 
 }
