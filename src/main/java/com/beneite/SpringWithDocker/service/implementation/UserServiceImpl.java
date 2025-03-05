@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
     private ModelMapper modelMapper;
     @Override
-    public UserDto createUser(UserDto userDto) {
+    public UserDto createUserImplementation(UserDto userDto) {
 
         Optional<UserEntity> ifEmailExist = userRepository.findByEmail(userDto.getEmail());     // check if email exist in DB
         if(ifEmailExist.isPresent()){
@@ -37,7 +37,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto getUserById(Long id) {
+    public UserDto getUserByIdImplementation(Long id) {
         UserEntity userEntity = userRepository.findById(id).orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", id)
         );
@@ -46,13 +46,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
+    public List<UserDto> getAllUsersImplementation() {
         List<UserEntity> allUsers = userRepository.findAll();
         return allUsers.stream().map(UserEntity-> AutoUserMapper.MAPPER.mapToDto(UserEntity)).collect(Collectors.toList());
     }
 
     @Override
-    public UserDto updateUser(UserDto userDto) {
+    public UserDto updateUserImplementation(UserDto userDto) {
         UserEntity existingData = userRepository.findById(userDto.getId()).orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", userDto.getId())
         );
@@ -72,7 +72,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(Long userId) {
+    public void deleteUserImplementation(Long userId) {
         UserEntity existingData = userRepository.findById(userId).orElseThrow(
                 () -> new ResourceNotFoundException("User", "id", userId)
         );
