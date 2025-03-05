@@ -4,7 +4,6 @@ services:
 
   mysql-service:
     image: mysql:latest
-    restart: always
     environment:
       MYSQL_DATABASE: userManagementDb
       MYSQL_ROOT_PASSWORD: ashish@123
@@ -18,6 +17,5 @@ services:
 
   adminer-service:
       image: adminer
-      restart: always
       ports:
         - "8081:8080"
