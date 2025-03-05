@@ -84,7 +84,6 @@ docker-compose --profile entireApp down
 ```yaml
   mysql-service:
     image: mysql:latest
-    restart: always
     environment:
       MYSQL_DATABASE: userManagementDb
       MYSQL_ROOT_PASSWORD: ashish@123
@@ -111,7 +110,6 @@ docker-compose --profile entireApp down
 ```yaml
   mysql-service-onlyDb:
     image: mysql:latest
-    restart: always
     environment:
       MYSQL_DATABASE: userManagementDb
       MYSQL_ROOT_PASSWORD: ashish@123
@@ -139,7 +137,6 @@ docker-compose --profile entireApp down
 ```yaml
   adminer-service:
     image: adminer
-    restart: always
     ports:
       - "8081:8080"
     profiles:
