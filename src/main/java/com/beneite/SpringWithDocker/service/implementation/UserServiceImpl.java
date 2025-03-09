@@ -1,7 +1,9 @@
 package com.beneite.SpringWithDocker.service.implementation;
 
 
-import com.beneite.SpringWithDocker.dto.UserDto;
+import com.beneite.SpringWithDocker.dto.requestDto.UserDto;
+import com.beneite.SpringWithDocker.dto.requestDto.UserIdRequestDto;
+import com.beneite.SpringWithDocker.dto.responseDto.UserIdResponseDto;
 import com.beneite.SpringWithDocker.entity.UserEntity;
 import com.beneite.SpringWithDocker.exception.DuplicateEmailException;
 import com.beneite.SpringWithDocker.exception.ResourceNotFoundException;
@@ -77,6 +79,16 @@ public class UserServiceImpl implements UserService {
                 () -> new ResourceNotFoundException("User", "id", userId)
         );
         userRepository.deleteById(userId);
+    }
+
+    @Override
+    public UserIdResponseDto getUserEmailFromIdImplementation(UserIdRequestDto userIdRequestDto) {
+        String email = userRepository.findById(userIdRequestDto.getUserId())
+                .map(user -> user.getEmail())
+                .orElseThrow(
+                () -> new ResourceNotFoundException("User", "id", userIdRequestDto.getUserId())
+        );
+        return new UserIdResponseDto(email);
     }
 
 

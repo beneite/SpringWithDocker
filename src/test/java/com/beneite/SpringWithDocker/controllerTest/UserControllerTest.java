@@ -1,7 +1,7 @@
 package com.beneite.SpringWithDocker.controllerTest;
 
 import com.beneite.SpringWithDocker.controller.UserController;
-import com.beneite.SpringWithDocker.dto.UserDto;
+import com.beneite.SpringWithDocker.dto.requestDto.UserDto;
 import com.beneite.SpringWithDocker.service.implementation.UserServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,6 +1,8 @@
 package com.beneite.SpringWithDocker.controller;
 
-import com.beneite.SpringWithDocker.dto.UserDto;
+import com.beneite.SpringWithDocker.dto.requestDto.UserDto;
+import com.beneite.SpringWithDocker.dto.requestDto.UserIdRequestDto;
+import com.beneite.SpringWithDocker.dto.responseDto.UserIdResponseDto;
 import com.beneite.SpringWithDocker.service.implementation.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -105,6 +107,20 @@ public class UserController {
     public ResponseEntity<String> deleteUserApi(@PathVariable("id") Long userId){
         userServiceImpl.deleteUserImplementation(userId);
         return new ResponseEntity<>("User with id:"+userId+" Deleted", HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Get User's Email from User id",
+            description = "this Get User's Email from User id"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "200-success, display All email id of the user"
+    )
+    @PostMapping("getEmailFromId")
+    public ResponseEntity<UserIdResponseDto> getUserEmailFromUserId(@Valid @RequestBody UserIdRequestDto userIdRequestDto){
+        UserIdResponseDto userIdResponseDto = userServiceImpl.getUserEmailFromIdImplementation(userIdRequestDto);
+        return new ResponseEntity<>(userIdResponseDto, HttpStatus.OK);
     }
 
 }
