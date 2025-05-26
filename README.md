@@ -2,7 +2,8 @@
 
 This project demonstrates how to containerize a **Spring Boot application** with **MySQL** and **Adminer** using **Docker Compose**.
 
-> Swagger Url: http://localhost:8080/swagger-ui/index.html#/
+> - Swagger Url: http://localhost:8080/swagger-ui/index.html#/
+> - UI Url: http://localhost:8080/
 
 ## 📌 Project Structure
 
@@ -14,6 +15,13 @@ project-root/
 ├── docker-compose.yml  # Defines multi-container setup
 ├── README.md           # Project documentation
 ```
+
+## 🧑‍💻 Technologies Used
+
+- Spring Boot
+- Spring Web
+- Thymeleaf
+- HTML/CSS/JavaScript
 
 ## 🔧 Services Overview
 
