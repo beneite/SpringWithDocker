@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Spring Boot User Management - Dark Mode</title>
+    <style>
+        body {
+          font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+          background-color: #121212;
+          color: #e0e0e0;
+          margin: 0;
+          padding: 20px;
+        }
+
+        h2 {
+          color: #e0e0e0;
+          text-align: center;
+          margin-bottom: 30px;
+        }
+
+        .section {
+          background: #1e1e1e;
+          padding: 25px;
+          margin-bottom: 30px;
+          border-radius: 10px;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.8);
+          max-width: 900px;
+          margin-left: auto;
+          margin-right: auto;
+        }
+
+        button {
+          padding: 12px 25px;
+          border: none;
+          border-radius: 6px;
+          font-size: 1rem;
+          font-weight: 600;
+          color: white;
+          cursor: pointer;
+          margin-top: 10px;
+          margin-right: 10px;
+          transition: background-color 0.3s ease;
+          box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+        }
+
+        button.get {
+          background-color: #28a745;
+        }
+
+        button.get:hover {
+          background-color: #218838;
+        }
+
+        button.post {
+          background-color: #007bff;
+        }
+
+        button.post:hover {
+          background-color: #0069d9;
+        }
+
+        button.delete {
+          background-color: #dc3545;
+        }
+
+        button.delete:hover {
+          background-color: #b02a37;
+        }
+
+        table {
+          width: 100%;
+          max-width: 100%;
+          border-collapse: collapse;
+          margin-top: 20px;
+          border: 1px solid #333;
+          border-radius: 8px;
+          overflow: hidden;
+          box-shadow: 0 2px 10px rgba(0,0,0,0.6);
+        }
+
+        thead tr {
+          background-color: #333;
+          color: #f1f1f1;
+        }
+
+        th, td {
+          padding: 14px 20px;
+          border-bottom: 1px solid #444;
+          text-align: left;
+        }
+
+        tbody tr:hover {
+          background-color: #2a2a2a;
+        }
+
+        .error {
+          color: #ff6b6b;
+          margin-top: 15px;
+          font-weight: 600;
+        }
+
+        .success {
+          color: #4caf50;
+          margin-top: 15px;
+          font-weight: 600;
+        }
+
+        .input-group {
+          margin-top: 15px;
+          margin-bottom: 15px;
+        }
+
+        label {
+          display: inline-block;
+          width: 120px;
+          font-weight: 600;
+          color: #ccc;
+        }
+
+        input[type="text"], input[type="email"], input[type="number"] {
+          padding: 8px 12px;
+          border-radius: 6px;
+          border: 1px solid #555;
+          background-color: #222;
+          color: #eee;
+          width: 200px;
+          font-size: 1rem;
+          outline: none;
+          transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus, input[type="email"]:focus, input[type="number"]:focus {
+          border-color: #007bff;
+          box-shadow: 0 0 5px #007bff;
+        }
+
+        /* Result areas styling */
+        .result-area {
+          margin-top: 20px;
+          min-height: 40px;
+          white-space: pre-wrap;
+          font-family: Consolas, monospace;
+        }
+
+    </style>
+</head>
+<body>
+<h2>Spring Boot User Management</h2>
+
+<!-- Get All Users Section -->
+<div class="section">
+    <button class="get" onclick="fetchAllUsers()">Get All Users</button>
+    <div id="resultAllUsers" class="result-area"></div>
+</div>
+
+<!-- Get User By ID Section -->
+<div class="section">
+    <div class="input-group">
+        <label for="userIdFetch">User ID:</label>
+        <input type="number" id="userIdFetch" min="1" placeholder="Enter user ID" />
+        <button class="get" onclick="fetchUserById()">Get User By ID</button>
+    </div>
+    <div id="resultUserById" class="result-area"></div>
+</div>
+
+<!-- Get Email by User ID Section -->
+<div class="section">
+    <div class="input-group">
+        <label for="userIdEmail">User ID:</label>
+        <input type="number" id="userIdEmail" min="1" placeholder="Enter user ID" />
+        <button class="post" onclick="fetchEmailByUserId()">Get Email By User ID</button>
+    </div>
+    <div id="resultEmailByUserId" class="result-area"></div>
+</div>
+
+<!-- Create User Section -->
+<div class="section">
+    <div class="input-group">
+        <label for="firstName">First Name:</label>
+        <input type="text" id="firstName" placeholder="First Name" />
+    </div>
+    <div class="input-group">
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" placeholder="Last Name" />
+    </div>
+    <div class="input-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" placeholder="Email" />
+    </div>
+    <button class="post" onclick="createUser()">Create User</button>
+    <div id="resultCreateUser" class="result-area"></div>
+</div>
+
+<!-- Delete User Section -->
+<div class="section">
+    <div class="input-group">
+        <label for="userIdDelete">User ID:</label>
+        <input type="number" id="userIdDelete" min="1" placeholder="Enter user ID to delete" />
+        <button class="delete" onclick="deleteUser()">Delete User</button>
+    </div>
+    <div id="resultDeleteUser" class="result-area"></div>
+</div>
+
+<script>
+    const baseUrl = "http://localhost:8080/api/user";
+
+    // Fetch all users
+    function fetchAllUsers() {
+      document.getElementById("resultAllUsers").textContent = "Loading...";
+      fetch(`${baseUrl}/getAllUser`)
+        .then(response => response.json())
+        .then(users => {
+          if(users.length === 0) {
+            document.getElementById("resultAllUsers").textContent = "No users found.";
+            return;
+          }
+          let html = `
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${users.map(u => `
+                  <tr>
+                    <td>${u.id}</td>
+                    <td>${u.firstName}</td>
+                    <td>${u.lastName}</td>
+                    <td>${u.email}</td>
+                  </tr>`).join('')}
+              </tbody>
+            </table>`;
+          document.getElementById("resultAllUsers").innerHTML = html;
+        })
+        .catch(err => {
+          document.getElementById("resultAllUsers").textContent = `Error: ${err.message}`;
+        });
+    }
+
+    // Fetch user by ID
+    function fetchUserById() {
+      const id = document.getElementById("userIdFetch").value.trim();
+      document.getElementById("resultUserById").textContent = "Loading...";
+      fetch(`${baseUrl}/getUserById/${id}`)
+        .then(response => response.json())
+        .then(user => {
+          if(user.email && user.email.startsWith("email should not")) {
+            document.getElementById("resultUserById").textContent = user.email;
+            return;
+          }
+          let html = `
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th><th>First Name</th><th>Last Name</th><th>Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>${user.id}</td>
+                  <td>${user.firstName}</td>
+                  <td>${user.lastName}</td>
+                  <td>${user.email}</td>
+                </tr>
+              </tbody>
+            </table>`;
+          document.getElementById("resultUserById").innerHTML = html;
+        })
+        .catch(err => {
+          document.getElementById("resultUserById").textContent = `Error: ${err.message}`;
+        });
+    }
+
+    // Fetch email by user ID (POST)
+    function fetchEmailByUserId() {
+      const id = document.getElementById("userIdEmail").value.trim();
+      document.getElementById("resultEmailByUserId").textContent = "Loading...";
+      fetch(`${baseUrl}/getEmailFromId`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: Number(id) }),
+      })
+        .then(response => response.json())
+        .then(data => {
+          if(data.email && data.email.startsWith("email should not")) {
+            document.getElementById("resultEmailByUserId").textContent = data.email;
+            return;
+          }
+          document.getElementById("resultEmailByUserId").textContent = `Email: ${data.email}`;
+        })
+        .catch(err => {
+          document.getElementById("resultEmailByUserId").textContent = `Error: ${err.message}`;
+        });
+    }
+
+    // Create user (POST)
+    function createUser() {
+      const firstName = document.getElementById("firstName").value.trim();
+      const lastName = document.getElementById("lastName").value.trim();
+      const email = document.getElementById("email").value.trim();
+      document.getElementById("resultCreateUser").textContent = "Processing...";
+
+      fetch(`${baseUrl}/create`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ firstName, lastName, email }),
+      })
+        .then(response => response.json())
+        .then(user => {
+          if(user.email && user.email.startsWith("email should not")) {
+            document.getElementById("resultCreateUser").textContent = user.email;
+            return;
+          }
+          let html = `
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th><th>First Name</th><th>Last Name</th><th>Email</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>${user.id}</td>
+                  <td>${user.firstName}</td>
+                  <td>${user.lastName}</td>
+                  <td>${user.email}</td>
+                </tr>
+              </tbody>
+            </table>`;
+          document.getElementById("resultCreateUser").innerHTML = html;
+
+          // Clear input fields
+          document.getElementById("firstName").value = "";
+          document.getElementById("lastName").value = "";
+          document.getElementById("email").value = "";
+        })
+        .catch(err => {
+          document.getElementById("resultCreateUser").textContent = `Error: ${err.message}`;
+        });
+    }
+
+    // Delete user (DELETE)
+    function deleteUser() {
+      const id = document.getElementById("userIdDelete").value.trim();
+      document.getElementById("resultDeleteUser").textContent = "Processing...";
+      fetch(`${baseUrl}/delete/${id}`, { method: "DELETE" })
+        .then(response => response.text())
+        .then(msg => {
+          document.getElementById("resultDeleteUser").textContent = msg;
+          document.getElementById("userIdDelete").value = "";
+        })
+        .catch(err => {
+          document.getElementById("resultDeleteUser").textContent = `Error: ${err.message}`;
+        });
+    }
+</script>
+</body>
+</html>
