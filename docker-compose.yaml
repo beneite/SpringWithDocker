@@ -1,3 +1,9 @@
+version: "3.8"
+
+networks:
+  spring-network:
+    driver: bridge
+
 services:
 
   mysql-service:
@@ -14,6 +20,8 @@ services:
       - ./src/main/resources/dockerizedEntireApp/volumes/mysql_data:/var/lib/mysql
     profiles:
       - entireApp
+    networks:
+      - spring-network
 
   mysql-service-onlyDb:
     image: mysql:latest
@@ -29,6 +37,8 @@ services:
       - ./src/main/resources/dockerizedEntireApp/volumes/mysql_data:/var/lib/mysql
     profiles:
       - onlyDb
+    networks:
+      - spring-network
 
   adminer-service:
     image: adminer
@@ -37,6 +47,8 @@ services:
     profiles:
       - onlyDb
       - entireApp
+    networks:
+      - spring-network
 
   springApplication-service:
     build: .
@@ -49,3 +61,5 @@ services:
       - mysql-service
     profiles:
       - entireApp
+    networks:
+      - spring-network
