@@ -16,11 +16,6 @@ WORKDIR /springApplication/app
 # Copy the jar file from the builder stage
 COPY --from=JARBUILDER /build/target/*.jar app.jar
 
-# Copy wait-for.sh into the image
-COPY wait-for.sh .
 
-# Make the script executable
-RUN chmod +x wait-for.sh
-
-# Use wait-for.sh as entrypoint
-ENTRYPOINT ["./wait-for.sh", "mysql-service", "java", "-jar", "app.jar"]
+# Use entrypoint
+ENTRYPOINT ["java", "-jar", "app.jar"]
