@@ -1,19 +1,26 @@
+# Stage 1: Build the jar
 FROM maven:3.8.5-openjdk-17 AS JARBUILDER
 
-WORKDIR build
+WORKDIR /build
 
 COPY src src
 COPY pom.xml pom.xml
 
 RUN mvn clean package -DskipTests
 
-# above we are builing the project jar file and consuming it below to launch the application
-
+# Stage 2: Run the app
 FROM bellsoft/liberica-openjre-alpine
 
-WORKDIR springApplication/app
+WORKDIR /springApplication/app
 
-COPY --from=JARBUILDER build/target/*.jar app.jar
+# Copy the jar file from the builder stage
+COPY --from=JARBUILDER /build/target/*.jar app.jar
 
-CMD ["java", "-jar", "app.jar"]
+# Copy wait-for.sh into the image
+COPY wait-for.sh .
 
+# Make the script executable
+RUN chmod +x wait-for.sh
+
+# Use wait-for.sh as entrypoint
+ENTRYPOINT ["./wait-for.sh", "mysql-service", "java", "-jar", "app.jar"]
