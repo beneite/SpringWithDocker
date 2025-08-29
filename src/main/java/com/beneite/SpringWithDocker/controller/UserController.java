@@ -2,6 +2,7 @@ package com.beneite.SpringWithDocker.controller;
 
 import com.beneite.SpringWithDocker.dto.requestDto.UserDto;
 import com.beneite.SpringWithDocker.dto.requestDto.UserIdRequestDto;
+import com.beneite.SpringWithDocker.dto.responseDto.CreateUserResponseDto;
 import com.beneite.SpringWithDocker.dto.responseDto.UserIdResponseDto;
 import com.beneite.SpringWithDocker.service.implementation.UserServiceImpl;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,9 +44,10 @@ public class UserController {
             description = "201-created, display the student record created"
     )
     @PostMapping("create")
-    public ResponseEntity<UserDto> createUserApi(@Valid @RequestBody UserDto userEntity){
-        UserDto savedUser = userServiceImpl.createUserImplementation(userEntity);
-        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
+    public ResponseEntity<CreateUserResponseDto> createUserApi(@Valid @RequestBody UserDto userEntity){
+        UserDto savedUserDto = userServiceImpl.createUserImplementation(userEntity);
+        CreateUserResponseDto createUserResponseDto = new CreateUserResponseDto(savedUserDto, "Record created successfully");
+        return new ResponseEntity<>(createUserResponseDto, HttpStatus.CREATED);
     }
 
     @Operation(

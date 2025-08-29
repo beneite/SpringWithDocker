@@ -2,11 +2,10 @@ package com.beneite.SpringWithDocker.controllerTest;
 
 import com.beneite.SpringWithDocker.controller.UserController;
 import com.beneite.SpringWithDocker.dto.requestDto.UserDto;
+import com.beneite.SpringWithDocker.dto.responseDto.CreateUserResponseDto;
 import com.beneite.SpringWithDocker.service.implementation.UserServiceImpl;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpStatus;
@@ -21,34 +20,40 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest
-@ExtendWith(MockitoExtension.class) // Ensures Mockito works
 class UserControllerTest {
-
-    @InjectMocks
-    private UserController userController; // Ensures mock dependencies are injected
 
     @MockBean
     private UserServiceImpl userServiceImpl; // Tells Spring to mock and inject this bean
+
+    @Autowired
+    private UserController userController; // Ensures mock dependencies are injected
 
     @Test
     public void testCreateUserApi(){
         // Given: Mock Service Layer
         when(userServiceImpl.createUserImplementation(any(UserDto.class)))
-                .thenReturn(buildCreateUserDto());
+                .thenReturn(UserDto.builder()
+                        .id(1L)
+                        .firstName("Ashish")
+                        .lastName("Mishra")
+                        .email("Ashish.Mishra@gmail.com")
+                        .build());
 
         // Act: Call the controller method
-        ResponseEntity<UserDto> createUserResponse = userController.createUserApi(buildCreateUserDto());
+        ResponseEntity<CreateUserResponseDto> createUserResponse = userController.createUserApi(buildCreateUserDto());
 
         // Assert: Validate the response
         assertNotNull(createUserResponse, "Response should not be null");
         assertEquals(HttpStatus.CREATED, createUserResponse.getStatusCode());
 
-        // asserting the response body data
-        assertEquals(createUserResponse.getBody().getId(), buildCreateUserDto().getId());
-        assertEquals(createUserResponse.getBody().getEmail(), buildCreateUserDto().getEmail());
-        assertEquals(createUserResponse.getBody().getFirstName(), buildCreateUserDto().getFirstName());
-        assertEquals(createUserResponse.getBody().getLastName(), buildCreateUserDto().getLastName());
+        CreateUserResponseDto createUserResponseDto = createUserResponse.getBody();
 
+        // asserting the response body data
+        assertEquals(1L, createUserResponseDto.getId());
+        assertEquals("Ashish.Mishra@gmail.com", createUserResponseDto.getEmail());
+        assertEquals("Ashish", createUserResponseDto.getFirstName());
+        assertEquals("Mishra", createUserResponseDto.getLastName());
+        assertEquals("Record created successfully", createUserResponseDto.getMessage());
     }
 
     @Test
