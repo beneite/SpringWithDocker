@@ -7,7 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.Lob;
+import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name = "config")
 public class ConfigEntity {

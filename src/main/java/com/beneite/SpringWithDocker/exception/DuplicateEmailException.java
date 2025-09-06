@@ -12,8 +12,8 @@ public class DuplicateEmailException extends RuntimeException{
 
     private String message;
 
-    public DuplicateEmailException(String message) {
-        super(message);
+    public DuplicateEmailException(String email) {
+        super(String.format("Email: %s, already available.", email));
         this.message = message;
     }
 }

@@ -29,7 +29,7 @@ public class UserServiceImpl implements UserService {
 
         Optional<UserEntity> ifEmailExist = userRepository.findByEmail(userDto.getEmail());     // check if email exist in DB
         if(ifEmailExist.isPresent()){
-            throw new DuplicateEmailException(String.format("Email: %s, already available.", userDto.getEmail()));
+            throw new DuplicateEmailException(userDto.getEmail());
         }
 
         UserEntity userEntity = AutoUserMapper.MAPPER.mapToJpa(userDto);     // userEntity is of type JPA
@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
 
         Optional<UserEntity> ifEmailExist = userRepository.findByEmail(userDto.getEmail());     // check if email exist in DB
         if(ifEmailExist.isPresent()){
-            throw new DuplicateEmailException(String.format("Email: %s, already available.", userDto.getEmail()));
+            throw new DuplicateEmailException(userDto.getEmail());
         }
 
         // saving the data

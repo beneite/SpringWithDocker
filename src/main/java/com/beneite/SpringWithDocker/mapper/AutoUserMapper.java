@@ -2,8 +2,10 @@ package com.beneite.SpringWithDocker.mapper;
 
 import com.beneite.SpringWithDocker.dto.requestDto.CreateEmployeeRequestDto;
 import com.beneite.SpringWithDocker.dto.requestDto.UserDto;
+import com.beneite.SpringWithDocker.dto.responseDto.ConfigEntityDto;
 import com.beneite.SpringWithDocker.dto.responseDto.CreateEmployeeResponseDto;
 import com.beneite.SpringWithDocker.dto.responseDto.GetEmployeeResponseDto;
+import com.beneite.SpringWithDocker.entity.ConfigEntity;
 import com.beneite.SpringWithDocker.entity.EmployeeEntity;
 import com.beneite.SpringWithDocker.entity.UserEntity;
 import org.mapstruct.Mapper;
@@ -25,4 +27,6 @@ public interface AutoUserMapper {
     GetEmployeeResponseDto mapToGetAllEmployeeResponseDto(EmployeeEntity employeeEntity);
 
     GetEmployeeResponseDto mapToGetEmployeeResponseDto(EmployeeEntity employeeEntity);
+
+    ConfigEntityDto mapToDto(ConfigEntity configEntity);
 }
