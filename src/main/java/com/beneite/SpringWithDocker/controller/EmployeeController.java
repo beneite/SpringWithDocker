@@ -52,7 +52,7 @@ public class EmployeeController {
 
     @Operation(
             summary = "Get All Employee API",
-            description = "this API get all student record"
+            description = "this API get all Employee record"
     )
     @ApiResponse(
             responseCode = "200",
@@ -66,16 +66,29 @@ public class EmployeeController {
 
     @Operation(
             summary = "Get User API",
-            description = "this API get a student record by id"
+            description = "this API get a Employee record by id"
     )
     @ApiResponse(
             responseCode = "200",
-            description = "200-success, display the student record created"
+            description = "200-success, display the Employee record created"
     )
-    // Api to get the user by id, end point: http://localhost:8080/api/user/getUserById/2
-    @GetMapping(GET_EMPLOYEE+"/{id}")
+    @GetMapping(GET_EMPLOYEE+"/id/{id}")
     public ResponseEntity<GetEmployeeResponseDto> getUserByIdApi(@PathVariable("id") Long userId){
         GetEmployeeResponseDto getEmployeeResponseDto = employeeServiceImpl.getEmployeeImplementation(userId);
+        return new ResponseEntity<>(getEmployeeResponseDto, HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Get Employee API with company email id",
+            description = "this API get a Employee record by id"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "200-success, display the Employee record created"
+    )
+    @GetMapping(GET_EMPLOYEE+"/companyEmail/{email}")
+    public ResponseEntity<GetEmployeeResponseDto> getUserByCompanyEmailIdApi(@PathVariable("email") String companyEmailId){
+        GetEmployeeResponseDto getEmployeeResponseDto = employeeServiceImpl.getEmployeeByCompanyEmailId(companyEmailId);
         return new ResponseEntity<>(getEmployeeResponseDto, HttpStatus.OK);
     }
 }

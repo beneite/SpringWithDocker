@@ -11,5 +11,6 @@ public interface EmployeeService {
     CreateEmployeeResponseDto createEmployeeImplementation(CreateEmployeeRequestDto createEmployeeRequestDto);
     List<GetEmployeeResponseDto> getAllEmployeeImplementation();
     GetEmployeeResponseDto getEmployeeImplementation(Long employeeId);
+    GetEmployeeResponseDto getEmployeeByCompanyEmailId(String companyEmailId);
 
 }

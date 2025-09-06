@@ -9,4 +9,8 @@ public final class GlobalConstants {
     public static final String CREATE  = "create";
     public static final String EMPLOYEE_RECORD_SUCCESS = "Employee record created successfully";
     public static final String GET_EMPLOYEE = "getEmployee";
+    public static final String DESIGNATIONS = "designations";
+    public static final String BANDS = "bands";
+    public static final String DEPARTMENTS = "departments";
+    public static final String BUSINESS_UNITS = "businessUnits";
 }
