@@ -97,7 +97,12 @@ class UserControllerTest {
     }
 
     private UserDto buildCreateUserDto(){
-        return new UserDto(1L, "Ashish.Mishra@yopmail.com", "Ashish", "Mishra");
+        return UserDto.builder()
+                .id(1L)
+                .firstName("Ashish")
+                .lastName("Mishra")
+                .email("Ashish.Mishra@gmail.com")
+                .build();
     }
 
     private UserDto buildGetUserByIdDto(){
