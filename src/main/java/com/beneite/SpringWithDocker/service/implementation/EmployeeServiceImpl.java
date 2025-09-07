@@ -5,7 +5,6 @@ import com.beneite.SpringWithDocker.dto.requestDto.CreateEmployeeRequestDto;
 import com.beneite.SpringWithDocker.dto.responseDto.CreateEmployeeResponseDto;
 import com.beneite.SpringWithDocker.dto.responseDto.GetEmployeeResponseDto;
 import com.beneite.SpringWithDocker.entity.EmployeeEntity;
-import com.beneite.SpringWithDocker.entity.UserEntity;
 import com.beneite.SpringWithDocker.exception.DuplicateEmailException;
 import com.beneite.SpringWithDocker.exception.ResourceNotFoundException;
 import com.beneite.SpringWithDocker.mapper.AutoUserMapper;
@@ -81,6 +80,24 @@ public class EmployeeServiceImpl implements EmployeeService {
         );
 
         return AutoUserMapper.MAPPER.mapToGetEmployeeResponseDto(employeeEntity);
+    }
+
+    @Override
+    public List<GetEmployeeResponseDto> getEmployeeByDepartment(String departmentName) {
+        List<EmployeeEntity> employeeEntity = employeeRepository.findByDepartment(departmentName);
+        return employeeEntity.stream().map(entity -> AutoUserMapper.MAPPER.mapToGetEmployeeResponseDto(entity)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<GetEmployeeResponseDto> getEmployeeByBusinessUnit(String businessUnit) {
+        List<EmployeeEntity> employeeEntity = employeeRepository.findByBusinessUnit(businessUnit);
+        return employeeEntity.stream().map(entity -> AutoUserMapper.MAPPER.mapToGetEmployeeResponseDto(entity)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<GetEmployeeResponseDto> getEmployeeByBand(String band) {
+        List<EmployeeEntity> employeeEntity = employeeRepository.findByBand(band);
+        return employeeEntity.stream().map(entity -> AutoUserMapper.MAPPER.mapToGetEmployeeResponseDto(entity)).collect(Collectors.toList());
     }
 
 
