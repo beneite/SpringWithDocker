@@ -12,5 +12,8 @@ public interface EmployeeService {
     List<GetEmployeeResponseDto> getAllEmployeeImplementation();
     GetEmployeeResponseDto getEmployeeImplementation(Long employeeId);
     GetEmployeeResponseDto getEmployeeByCompanyEmailId(String companyEmailId);
+    List<GetEmployeeResponseDto> getEmployeeByDepartment(String departmentName);
+    List<GetEmployeeResponseDto> getEmployeeByBusinessUnit(String businessUnit);
+    List<GetEmployeeResponseDto> getEmployeeByBand(String band);
 
 }

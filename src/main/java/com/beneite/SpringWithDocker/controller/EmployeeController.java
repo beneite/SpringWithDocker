@@ -79,16 +79,58 @@ public class EmployeeController {
     }
 
     @Operation(
-            summary = "Get Employee API with company email id",
-            description = "this API get a Employee record by id"
+            summary = "Get Employee details from company email id",
+            description = "this API get a Employee record by company email id"
     )
     @ApiResponse(
             responseCode = "200",
-            description = "200-success, display the Employee record created"
+            description = "200-success, display the Employee record"
     )
     @GetMapping(GET_EMPLOYEE+"/companyEmail/{email}")
     public ResponseEntity<GetEmployeeResponseDto> getUserByCompanyEmailIdApi(@PathVariable("email") String companyEmailId){
         GetEmployeeResponseDto getEmployeeResponseDto = employeeServiceImpl.getEmployeeByCompanyEmailId(companyEmailId);
+        return new ResponseEntity<>(getEmployeeResponseDto, HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Get Employee from a specific department name",
+            description = "this API get a Employee record by from a specific department"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "200-success, display Employee from a specific department name"
+    )
+    @GetMapping(GET_EMPLOYEE+"/departmentName/{departmentName}")
+    public ResponseEntity<List<GetEmployeeResponseDto>> getUserByDepartmentNameApi(@PathVariable("departmentName") String departmentName){
+        List<GetEmployeeResponseDto> getEmployeeResponseDto = employeeServiceImpl.getEmployeeByDepartment(departmentName);
+        return new ResponseEntity<>(getEmployeeResponseDto, HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Get Employee from a specific businessUnit name",
+            description = "this API get a Employee record by from a specific businessUnit"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "200-success, display Employee from a specific businessUnit name"
+    )
+    @GetMapping(GET_EMPLOYEE+"/businessUnit/{businessUnit}")
+    public ResponseEntity<List<GetEmployeeResponseDto>> getUserByBusinessUnitApi(@PathVariable("businessUnit") String departmentName){
+        List<GetEmployeeResponseDto> getEmployeeResponseDto = employeeServiceImpl.getEmployeeByBusinessUnit(departmentName);
+        return new ResponseEntity<>(getEmployeeResponseDto, HttpStatus.OK);
+    }
+
+    @Operation(
+            summary = "Get Employee from a specific band name",
+            description = "this API get a Employee record by from a specific band"
+    )
+    @ApiResponse(
+            responseCode = "200",
+            description = "200-success, display Employee from a specific band name"
+    )
+    @GetMapping(GET_EMPLOYEE+"/band/{businessUnit}")
+    public ResponseEntity<List<GetEmployeeResponseDto>> getUserByBandApi(@PathVariable("businessUnit") String departmentName){
+        List<GetEmployeeResponseDto> getEmployeeResponseDto = employeeServiceImpl.getEmployeeByBand(departmentName);
         return new ResponseEntity<>(getEmployeeResponseDto, HttpStatus.OK);
     }
 }
