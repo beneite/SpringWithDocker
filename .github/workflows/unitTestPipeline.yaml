@@ -1,0 +1,67 @@
+name: p23_slack_notification
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  trigger-unit-tests-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java and Maven
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'  # or 11 based on your project
+
+      - name: Unit-Test execution started
+        run: mvn clean surefire-report:report
+
+      - name: Test Run Completed
+        if: always()
+        run: |
+          echo "✅ Job completed for ${{ inputs.userName }} on branch ${{ github.ref_name }}"
+          cat target/surefire-reports/*Test.txt
+
+      - name: Upload Surefire HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-report
+          path: target/site/surefire-report.html
+
+      - name: Extract Test Summary
+        id: test_summary
+        if: always()
+        run: |
+          total=$(grep -o "Tests run:" target/surefire-reports/*.txt | wc -l || true)
+          passed=$(grep -o "BUILD SUCCESS" target/surefire-reports/*.txt | wc -l || true)
+          failed=$(grep -o "Failures:" target/surefire-reports/*.txt | wc -l || true)
+          echo "summary=🧪 Total: $total | ✅ Passed: $passed | ❌ Failed: $failed" >> $GITHUB_OUTPUT
+
+      - name: Set Slack Color
+        id: slack_color
+        if: always()
+        run: |
+          if [ "${{ job.status }}" == "success" ]; then
+            echo "color=#36a64f" >> $GITHUB_OUTPUT
+          else
+            echo "color=#ff0000" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Publish Test Results on Slack
+        if: always()
+        uses: docker://technosophos/slack-notify
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_TITLE: >
+            Unit-Test Results - ${{ job.status == 'success' && '✅ Success' || '❌ Failed' }}
+          SLACK_MESSAGE: |
+            *👤 Triggered by:* `${{ github.actor }}`
+            *🌿 Branch:* `${{ github.ref_name }}`
+            *🧪 Test Summary:* `${{ steps.test_summary.outputs.summary }}`
+            *📊 Full Report:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Report in Artifacts>
+          SLACK_COLOR: ${{ steps.slack_color.outputs.color }}
