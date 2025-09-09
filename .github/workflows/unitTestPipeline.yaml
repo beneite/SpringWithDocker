@@ -41,22 +41,22 @@ jobs:
           failures=0
           errors=0
           skipped=0
+          duration=0
 
-          for file in target/surefire-reports/*.txt; do
+          for file in target/surefire-reports/TEST-*.xml; do
             if [ -f "$file" ]; then
-              # Grab the FIRST "Tests run:" line only
-              line=$(grep -m1 "Tests run:" "$file")
-              if [ -n "$line" ]; then
-                t=$(echo "$line" | sed -E 's/.*Tests run: *([0-9]+).*/\1/')
-                f=$(echo "$line" | sed -E 's/.*Failures: *([0-9]+).*/\1/')
-                e=$(echo "$line" | sed -E 's/.*Errors: *([0-9]+).*/\1/')
-                s=$(echo "$line" | sed -E 's/.*Skipped: *([0-9]+).*/\1/')
+              t=$(grep -oP 'tests="\K[0-9]+' "$file" | head -1)
+              f=$(grep -oP 'failures="\K[0-9]+' "$file" | head -1)
+              e=$(grep -oP 'errors="\K[0-9]+' "$file" | head -1)
+              s=$(grep -oP 'skipped="\K[0-9]+' "$file" | head -1)
+              d=$(grep -oP 'time="\K[0-9]+(\.[0-9]+)?' "$file" | head -1)
 
-                total=$((total + t))
-                failures=$((failures + f))
-                errors=$((errors + e))
-                skipped=$((skipped + s))
-              fi
+              total=$((total + t))
+              failures=$((failures + f))
+              errors=$((errors + e))
+              skipped=$((skipped + s))
+              # use bc for float-safe addition
+              duration=$(echo "$duration + $d" | bc)
             fi
           done
 
@@ -64,6 +64,8 @@ jobs:
           failed=$((failures + errors))
 
           echo "summary=🧪 Total: $total | ✅ Passed: $passed | ❌ Failed: $failed" >> $GITHUB_OUTPUT
+          echo "duration=⏱️ Duration: ${duration}s" >> $GITHUB_OUTPUT
+
 
       - name: Set Slack Color
         id: slack_color
@@ -86,5 +88,6 @@ jobs:
             *👤 Triggered by:* `${{ github.actor }}`
             *🌿 Branch:* `${{ github.ref_name }}`
             *🧪 Test Summary:* `${{ steps.test_summary.outputs.summary }}`
+            *⏱️ Duration:* `${{ steps.test_summary.outputs.duration }}`
             *📊 Full Report:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Report in Artifacts>
           SLACK_COLOR: ${{ steps.slack_color.outputs.color }}
