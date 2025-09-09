@@ -79,6 +79,7 @@ jobs:
           else
             echo "color=#ff0000" >> $GITHUB_OUTPUT
           fi
+
       - name: Build PR link
         id: pr_link
         run: |
