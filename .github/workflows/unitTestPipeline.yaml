@@ -37,46 +37,33 @@ jobs:
         id: test_summary
         if: always()
         run: |
-          # use bash features
-          shopt -s nullglob
+          total=0
+          failures=0
+          errors=0
+          skipped=0
 
-          # Look for text reports first (common)
-          files=(target/surefire-reports/*Test.txt target/surefire-reports/*.txt)
+          for file in target/surefire-reports/*.txt; do
+            if [ -f "$file" ]; then
+              # Grab the FIRST "Tests run:" line only
+              line=$(grep -m1 "Tests run:" "$file")
+              if [ -n "$line" ]; then
+                t=$(echo "$line" | sed -E 's/.*Tests run: *([0-9]+).*/\1/')
+                f=$(echo "$line" | sed -E 's/.*Failures: *([0-9]+).*/\1/')
+                e=$(echo "$line" | sed -E 's/.*Errors: *([0-9]+).*/\1/')
+                s=$(echo "$line" | sed -E 's/.*Skipped: *([0-9]+).*/\1/')
 
-          if [ ${#files[@]} -eq 0 ]; then
-            # fallback to XML reports if txt not present
-            xml_files=(target/surefire-reports/TEST-*.xml)
-            if [ ${#xml_files[@]} -eq 0 ]; then
-              echo "summary=⚠️ No test result files found." >> $GITHUB_OUTPUT
-              exit 0
+                total=$((total + t))
+                failures=$((failures + f))
+                errors=$((errors + e))
+                skipped=$((skipped + s))
+              fi
             fi
+          done
 
-            sums=$(sed -n 's/.*tests="\([0-9]\+\)".*failures="\([0-9]\+\)".*errors="\([0-9]\+\)".*skipped="\([0-9]\+\)".*/\1 \2 \3 \4/p' "${xml_files[@]}" \
-              | awk '{t+=$1;f+=$2;e+=$3;s+=$4} END {p=t-f-e-s; printf "%d|%d|%d|%d|%d", t, f, e, s, p}')
+          passed=$((total - failures - errors - skipped))
+          failed=$((failures + errors))
 
-            if [ -z "$sums" ]; then
-              echo "summary=⚠️ Could not parse XML test results." >> $GITHUB_OUTPUT
-              exit 0
-            fi
-
-            IFS='|' read total failures errors skipped passed <<< "$sums"
-            fails=$((failures + errors))
-            echo "summary=🧪 Total: $total | ✅ Passed: $passed | ❌ Failed: $fails" >> $GITHUB_OUTPUT
-            exit 0
-          fi
-
-          # Parse human-readable .txt surefire reports
-          sums=$(sed -n 's/.*Tests run:[[:space:]]*\([0-9]\+\)[[:space:]]*,[[:space:]]*Failures:[[:space:]]*\([0-9]\+\)[[:space:]]*,[[:space:]]*Errors:[[:space:]]*\([0-9]\+\)[[:space:]]*,[[:space:]]*Skipped:[[:space:]]*\([0-9]\+\).*/\1 \2 \3 \4/p' "${files[@]}" \
-            | awk '{t+=$1;f+=$2;e+=$3;s+=$4} END {p=t-f-e-s; printf "%d|%d|%d|%d|%d", t, f, e, s, p}')
-
-          if [ -z "$sums" ]; then
-            echo "summary=⚠️ Could not parse text test results." >> $GITHUB_OUTPUT
-            exit 0
-          fi
-
-          IFS='|' read total failures errors skipped passed <<< "$sums"
-          fails=$((failures + errors))
-          echo "summary=🧪 Total: $total | ✅ Passed: $passed | ❌ Failed: $fails" >> $GITHUB_OUTPUT
+          echo "summary=🧪 Total: $total | ✅ Passed: $passed | ❌ Failed: $failed" >> $GITHUB_OUTPUT
 
       - name: Set Slack Color
         id: slack_color
