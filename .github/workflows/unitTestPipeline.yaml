@@ -1,7 +1,10 @@
 name: Unit-Test pipeline and publish results
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:   # manual run
+  pull_request:        # auto run only on PRs into master
+    branches:
+      - master
 
 
 jobs:
@@ -89,5 +92,6 @@ jobs:
             *🌿 Branch:* `${{ github.ref_name }}`
             *🧪 Test Summary:* `${{ steps.test_summary.outputs.summary }}`
             *⏱️ Duration:* `${{ steps.test_summary.outputs.duration }}`
+            *🔗 PR:* `${{ ${{ steps.pr_link.outputs.link }} }}`
             *📊 Full Report:* <${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|Open Report in Artifacts>
           SLACK_COLOR: ${{ steps.slack_color.outputs.color }}
