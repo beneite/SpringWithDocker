@@ -79,6 +79,14 @@ jobs:
           else
             echo "color=#ff0000" >> $GITHUB_OUTPUT
           fi
+      - name: Build PR link
+        id: pr_link
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            echo "link=*🔗 PR:* <${{ github.event.pull_request.html_url }}|#${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}>" >> $GITHUB_OUTPUT
+          else
+            echo "link=" >> $GITHUB_OUTPUT
+          fi
 
       - name: Publish Test Results on Slack
         if: always()
