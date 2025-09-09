@@ -215,3 +215,5 @@ docker compose --profile entireApp up
 ✔ **Avoids exposing MySQL publicly when not needed.**  
 ✔ **Allows local access (`8082:3306`) when using `onlyDb` profile.**  
 ✔ **Keeps `entireApp` profile isolated (Spring Boot can access MySQL internally).**
+
+*
