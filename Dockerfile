@@ -16,6 +16,8 @@ WORKDIR /springApplication/app
 # Copy the jar file from the builder stage
 COPY --from=JARBUILDER /build/target/*.jar app.jar
 
+# Copy Datadog Java Agent
+COPY dd-java-agent.jar dd-java-agent.jar
 
-# Use entrypoint
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Use entrypoint with Datadog agent
+ENTRYPOINT ["java", "-javaagent:/springApplication/app/dd-java-agent.jar", "-Ddd.service=spring-app", "-Ddd.env=dev", "-Ddd.version=1.0.0", "-jar", "app.jar"]

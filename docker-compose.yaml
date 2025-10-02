@@ -55,6 +55,23 @@ services:
     networks:
       - spring-network
 
+  datadog:
+    image: gcr.io/datadoghq/agent:latest
+    container_name: datadog
+    environment:
+      DD_API_KEY: d68a86f0c4fdac50f33266be3a532f53
+      DD_SITE: datadoghq.eu
+      DD_APM_ENABLED: true
+      DD_LOGS_ENABLED: true
+      DD_CONTAINER_EXCLUDE: "name:datadog"
+      DD_APM_RECEIVER_SOCKET: ""
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    ports:
+      - "8126:8126"
+    networks:
+      - spring-network
+
   springApplication-service:
     build: .
     image: userserviceimage:v1
@@ -62,8 +79,18 @@ services:
       - "8080:8080"
     environment:
       spring.datasource.url: "jdbc:mysql://mysql-service:3306/userManagementDb?useSSL=false&allowPublicKeyRetrieval=true"
+      DD_AGENT_HOST: datadog
+      DD_TRACE_AGENT_PORT: 8126
+      DD_ENV: dev
+      DD_SERVICE: spring-app
+      DD_VERSION: 1.0.0
+      DD_TRACE_ENABLED: true
+      DD_API_KEY: d68a86f0c4fdac50f33266be3a532f53
+      DD_LOGS_ENABLED: true
+      DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL: true
     depends_on:
       - mysql-service
+      - datadog
     profiles:
       - entireApp
     networks:
